@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.google.common.collect.Iterables;
+import com.mesosphere.sdk.api.types.EndpointProducer;
 import com.mesosphere.sdk.offer.Constants;
 import com.mesosphere.sdk.offer.PortRequirement;
 import com.mesosphere.sdk.offer.ResourceRequirement;
 import com.mesosphere.sdk.offer.evaluate.PortsRequirement;
+import com.mesosphere.sdk.specification.yaml.YAMLServiceSpecFactory;
 import org.apache.mesos.Protos;
 import com.mesosphere.sdk.testutils.OfferRequirementTestUtils;
 
@@ -213,6 +215,24 @@ public class DefaultServiceSpecTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("invalid-config-file.yml").getFile());
         generateServiceSpec(generateRawSpecFromYAML(file));
+    }
+
+    @Test
+    public void testKk() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        RawServiceSpec rawServiceSpec = YAMLServiceSpecFactory.generateRawSpecFromYAML(
+                new File(classLoader.getResource("aaa.yml").getFile())
+        );
+        DefaultScheduler.Builder schedBuilder =
+                DefaultScheduler.newBuilder(
+                        YAMLServiceSpecFactory.generateServiceSpec(rawServiceSpec)
+                ).setPlansFrom(rawServiceSpec);
+
+        DefaultServiceSpec initialServiceSpec = (DefaultServiceSpec) schedBuilder.getServiceSpec();
+        DefaultServiceSpec.Builder newServiceSpecBuilder = initialServiceSpec.newBuilder(initialServiceSpec).secret(
+                "xxx"
+        );
+        DefaultScheduler scheduler = DefaultScheduler.newBuilder(newServiceSpecBuilder.build()).build();
     }
 
     @Test(expected = IllegalStateException.class)

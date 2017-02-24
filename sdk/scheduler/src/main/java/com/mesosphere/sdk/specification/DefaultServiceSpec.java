@@ -15,6 +15,8 @@ import com.mesosphere.sdk.storage.StorageError.Reason;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -28,6 +30,7 @@ import java.util.*;
  */
 public class DefaultServiceSpec implements ServiceSpec {
     private static final Comparator COMPARATOR = new Comparator();
+    protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultServiceSpec.class);
 
     public static final String DEFAULT_ZK_CONNECTION = "master.mesos:2181";
 
@@ -36,6 +39,7 @@ public class DefaultServiceSpec implements ServiceSpec {
     private String name;
     private String role;
     private String principal;
+    private String secret;
 
     @NotNull
     @Min(value = 0, message = "API port value should be >= 0")
@@ -57,6 +61,7 @@ public class DefaultServiceSpec implements ServiceSpec {
             @JsonProperty("name") String name,
             @JsonProperty("role") String role,
             @JsonProperty("principal") String principal,
+            @JsonProperty("secret") String secret,
             @JsonProperty("api-port") int apiPort,
             @JsonProperty("web-url") String webUrl,
             @JsonProperty("zookeeper") String zookeeperConnection,
@@ -65,6 +70,7 @@ public class DefaultServiceSpec implements ServiceSpec {
         this.name = name;
         this.role = role;
         this.principal = principal;
+        this.secret = secret;
         this.apiPort = apiPort;
         this.webUrl = webUrl;
         // If no zookeeperConnection string is configured, fallback to the default value.
@@ -80,6 +86,7 @@ public class DefaultServiceSpec implements ServiceSpec {
                 builder.name,
                 builder.role,
                 builder.principal,
+                builder.secret,
                 builder.apiPort,
                 builder.webUrl,
                 builder.zookeeperConnection,
@@ -96,6 +103,7 @@ public class DefaultServiceSpec implements ServiceSpec {
         builder.name = copy.name;
         builder.role = copy.role;
         builder.principal = copy.principal;
+        builder.secret = copy.secret;
         builder.apiPort = copy.apiPort;
         builder.zookeeperConnection = copy.zookeeperConnection;
         builder.webUrl = copy.webUrl;
@@ -117,6 +125,11 @@ public class DefaultServiceSpec implements ServiceSpec {
     @Override
     public String getPrincipal() {
         return principal;
+    }
+
+    @Override
+    public String getSecret() {
+        return secret;
     }
 
     @Override
@@ -280,6 +293,7 @@ public class DefaultServiceSpec implements ServiceSpec {
         private String name;
         private String role;
         private String principal;
+        private String secret;
         private Integer apiPort;
         private String webUrl;
         private String zookeeperConnection;
@@ -322,6 +336,19 @@ public class DefaultServiceSpec implements ServiceSpec {
             this.principal = principal;
             return this;
         }
+
+        /**
+         * Sets the {@code secret} and returns a reference to this Builder so that the methods can be chained
+         * together.
+         *
+         * @param secret the {@code secret} to set
+         * @return a reference to this Builder
+         */
+        public Builder secret(String secret) {
+            this.secret = secret;
+            return this;
+        }
+
 
         /**
          * Sets the {@code apiPort} and returns a reference to this Builder so that the methods can be chained together.

@@ -153,7 +153,7 @@ public class DefaultService implements Service {
         registerAndRunFramework(
                 defaultScheduler,
                 getFrameworkInfo(serviceSpec, schedulerBuilder.getStateStore()),
-                serviceSpec.getZookeeperConnection());
+                serviceSpec.getZookeeperConnection(), serviceSpec.getSecret() != null ? serviceSpec.getSecret().getBytes() : null);
     }
 
     private void startApiServer(DefaultScheduler defaultScheduler, int apiPort) {
@@ -198,9 +198,9 @@ public class DefaultService implements Service {
     private static void registerAndRunFramework(
             Scheduler sched,
             Protos.FrameworkInfo frameworkInfo,
-            String zookeeperHost) {
+            String zookeeperHost, byte[] secret) {
         LOGGER.info("Registering framework: {}", TextFormat.shortDebugString(frameworkInfo));
-        new SchedulerDriverFactory().create(sched, frameworkInfo, String.format("zk://%s/mesos", zookeeperHost)).run();
+        new SchedulerDriverFactory().create(sched, frameworkInfo, String.format("zk://%s/mesos", zookeeperHost), secret).run();
     }
 
     private Protos.FrameworkInfo getFrameworkInfo(ServiceSpec serviceSpec, StateStore stateStore) {

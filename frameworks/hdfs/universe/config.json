@@ -25,10 +25,25 @@
           "type":"string",
           "default":""
         },
+        "secret-file-path": {
+          "description":"The secret file on the host",
+          "type":"string",
+          "default":"/etc/ethos/dcos-hdfs-secret"
+        }, 
+        "secret-file-name": {
+          "description":"The secret file on the host",
+          "type":"string",
+          "default":"dcos-hdfs-secret"
+        }, 
         "deploy_strategy": {
           "description": "HDFS deployment strategy. [parallel, serial]",
           "type": "string",
           "default": "parallel"
+        },
+        "spec_file" : {
+          "description":"The name of the service spec yaml file.",
+          "type":"string",
+          "default":"svc.yml"
         },
         "tls": {
           "type": "object",
