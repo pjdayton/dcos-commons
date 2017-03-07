@@ -264,7 +264,7 @@ public class DefaultServiceSpec implements ServiceSpec {
                         new String(bytes, CHARSET), DefaultServiceSpec.class, objectMapper);
             } catch (IOException e) {
                 throw new ConfigStoreException(Reason.SERIALIZATION_ERROR,
-                        "Failed to deserialize DefaultServiceSpecification from JSON: " + e.getMessage(), e);
+                        "Failed to deserialize DefaultServiceSpecification from JSON: " + e.getMessage() + "---\n" + new String(bytes, CHARSET) + "\n---", e);
             }
         }
 

@@ -199,6 +199,15 @@ public class DefaultServiceSpecTest {
         }
     }
 
+    @Test
+    public void multiVolumes() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("multi-volumes.yml").getFile());
+        DefaultServiceSpec s = generateServiceSpec(generateRawSpecFromYAML(file));
+        System.out.println("a");
+    }
+
+
     @Test(expected = FileNotFoundException.class)
     public void invalidConfigFile() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();

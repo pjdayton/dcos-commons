@@ -43,6 +43,20 @@ public class ResourceUtilsTest {
     }
 
     @Test
+    public void testCreateDesiredPathVolume() {
+        Resource desiredPathVolume = ResourceUtils.getDesiredPathVolume(
+                TestConstants.ROLE,
+                TestConstants.PRINCIPAL,
+                1000,
+                TestConstants.CONTAINER_PATH, "/");
+        Assert.assertNotNull(desiredPathVolume);
+        Assert.assertTrue(desiredPathVolume.getDisk().hasPersistence());
+        Assert.assertEquals("", desiredPathVolume.getDisk().getPersistence().getId());
+        Assert.assertEquals("", new ResourceRequirement(desiredPathVolume).getResourceId());
+        Assert.assertEquals(Source.Type.PATH, desiredPathVolume.getDisk().getSource().getType());
+    }
+
+    @Test
     public void testGetUnreservedRanges() {
         List<Protos.Value.Range> testRanges = getTestRanges();
         Resource resource = ResourceUtils.getUnreservedRanges("ports", testRanges);

@@ -475,6 +475,15 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
                                     volumeSpec.getValue().getScalar().getValue(),
                                     volumeSpec.getContainerPath()));
                     break;
+                case PATH:
+                    resources.add(
+                            ResourceUtils.getDesiredPathVolume(
+                                    volumeSpec.getRole(),
+                                    volumeSpec.getPrincipal(),
+                                    volumeSpec.getValue().getScalar().getValue(),
+                                    volumeSpec.getRootPath(),
+                                    volumeSpec.getContainerPath()));
+                    break;
                 default:
                     LOGGER.error("Encountered unsupported disk type: " + volumeSpec.getType());
             }

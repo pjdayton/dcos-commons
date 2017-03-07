@@ -20,6 +20,7 @@ public class DefaultVolumeSpec extends DefaultResourceSpec implements VolumeSpec
     public static final String RESOURCE_NAME = "disk";
 
     private final Type type;
+    private final String rootPath;
 
     /** Regexp in @Pattern will detect blank string. No need to use @NotEmpty or @NotBlank. */
     @NotNull
@@ -27,18 +28,32 @@ public class DefaultVolumeSpec extends DefaultResourceSpec implements VolumeSpec
     private final String containerPath;
 
     public DefaultVolumeSpec(
+            String name,
             double diskSize,
             Type type,
+            String rootPath,
             String containerPath,
             String role,
             String principal,
             String envKey) {
-        this(type, containerPath, RESOURCE_NAME, scalarValue(diskSize), role, principal, envKey);
+        this(type, rootPath, containerPath, RESOURCE_NAME, scalarValue(diskSize), role, principal, envKey);
+    }
+
+    public DefaultVolumeSpec(
+            double diskSize,
+            Type type,
+            String rootPath,
+            String containerPath,
+            String role,
+            String principal,
+            String envKey) {
+        this(type, rootPath, containerPath, RESOURCE_NAME, scalarValue(diskSize), role, principal, envKey);
     }
 
     @JsonCreator
     private DefaultVolumeSpec(
             @JsonProperty("type") Type type,
+            @JsonProperty("root-path") String rootPath,
             @JsonProperty("container-path") String containerPath,
             @JsonProperty("name") String name,
             @JsonProperty("value") Protos.Value value,
@@ -47,6 +62,7 @@ public class DefaultVolumeSpec extends DefaultResourceSpec implements VolumeSpec
             @JsonProperty("env-key")  String envKey) {
         super(name, value, role, principal, envKey);
         this.type = type;
+        this.rootPath = rootPath;
         this.containerPath = containerPath;
 
         ValidationUtils.validate(this);
@@ -56,6 +72,9 @@ public class DefaultVolumeSpec extends DefaultResourceSpec implements VolumeSpec
     public Type getType() {
         return type;
     }
+
+    @Override
+    public String getRootPath() { return rootPath; }
 
     @Override
     public String getContainerPath() {
@@ -98,6 +117,10 @@ public class DefaultVolumeSpec extends DefaultResourceSpec implements VolumeSpec
                 return new VolumeRequirement(
                         ResourceUtils.getDesiredMountVolume(
                                 getRole(), getPrincipal(), getValue().getScalar().getValue(), getContainerPath()));
+            case PATH:
+                return new VolumeRequirement(
+                        ResourceUtils.getDesiredPathVolume(
+                                getRole(), getPrincipal(), getValue().getScalar().getValue(), getRootPath(), getContainerPath()));
             default:
                 throw new IllegalArgumentException("FIX: can't handle");
         }

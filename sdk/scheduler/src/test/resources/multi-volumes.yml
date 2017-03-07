@@ -1,0 +1,16 @@
+name: "hello-world"
+pods:
+  pod-type:
+    count: 1
+    tasks:
+      meta-data-task:
+        goal: RUNNING
+        cmd: "./task-cmd"
+        cpus: 0.1
+        memory: 512
+        volumes:
+          /dcos/volume0/datanode:
+            type: PATH
+            size: 5000
+            path: volume0
+            root: /dcos/volume0/datanode
