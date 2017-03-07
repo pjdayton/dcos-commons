@@ -54,10 +54,12 @@ public class KafkaService extends DefaultService {
     protected void startApiServer(DefaultScheduler defaultScheduler,
                                   int apiPort,
                                   Collection<Object> additionalResources) {
+        final ServiceSpec serviceSpec = super.getServiceSpec();
         final Collection<Object> apiResources = new ArrayList<>();
 
-        KafkaZKClient kafkaZKClient = new KafkaZKClient(super.getServiceSpec().getZookeeperConnection(),
-                DcosConstants.SERVICE_ROOT_PATH_PREFIX + super.getServiceSpec().getName());
+        //DcosConstants.SERVICE_ROOT_PATH_PREFIX + super.getServiceSpec().getName()
+        final String zkUri = String.format("/kafka-%s", serviceSpec.getName());
+        final KafkaZKClient kafkaZKClient = new KafkaZKClient(System.getenv("KAFKA_ZOOKEEPER_CONNECT"), zkUri);
 
         apiResources.add(new BrokerResource(kafkaZKClient));
         apiResources.add(new TopicResource(new CmdExecutor(kafkaZKClient, System.getenv("KAFKA_VERSION_PATH")),

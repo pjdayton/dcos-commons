@@ -57,6 +57,7 @@
     "CONFIG_TEMPLATE_PATH": "kafka-scheduler",
     "KAFKA_VERSION_PATH": "kafka_2.11-0.10.1.0",
     "MESOS_ZOOKEEPER_URI": "master.mesos:2181",
+    "KAFKA_ZOOKEEPER_CONNECT": "{{kafka.zookeeper_connect}}",
 
     {{#brokers.jmx.enable}}
     "TASKCFG_ALL_KAKFA_JMX_OPTS": "-Dcom.sun.management.jmxremote={{brokers.jmx.remote}} -Dcom.sun.management.jmxremote.registry.ssl={{brokers.jmx.remote_registry_ssl}} -Dcom.sun.management.jmxremote.ssl={{brokers.jmx.remote_ssl}} -Dcom.sun.management.jmxremote.ssl.need.client.auth={{brokers.jmx.remote_ssl_need_client_auth}} -Dcom.sun.management.jmxremote.authenticate={{brokers.jmx.remote_authenticate}} {{brokers.additional_kafka_jmx_opts}}"
