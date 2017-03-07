@@ -190,13 +190,16 @@
           "description":"Data node disk type",
           "type":"string",
           "default": "ROOT"
+        },
+        "disks":{
+          "description":"Data node disks specification",
+          "type":"string",
+          "default": ""
         }
       },
       "required":[
         "cpus",
-        "mem",
-        "disk",
-        "disk_type"
+        "mem"
       ]
     },
     "hdfs": {

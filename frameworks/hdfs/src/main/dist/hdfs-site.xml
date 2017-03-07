@@ -124,7 +124,8 @@
     </property>
     <property>
         <name>dfs.datanode.data.dir</name>
-        <value>{{MESOS_SANDBOX}}/data-data</value>
+        {{#ParseDisks}}{{/ParseDisks}}
+        <value>{{#data_disks}}{{MESOS_SANDBOX}}/{{Path}}{{^Last}},{{/Last}}{{/data_disks}}</value>
     </property>
     <property>
         <name>dfs.datanode.balance.bandwidthPerSec</name>
