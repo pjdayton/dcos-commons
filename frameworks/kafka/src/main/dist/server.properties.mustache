@@ -53,7 +53,13 @@ socket.request.max.bytes={{KAFKA_SOCKET_REQUEST_MAX_BYTES}}
 ############################# Log Basics #############################
 
 # A comma seperated list of directories under which to store log files
+{{#BROKER_DISK_TYPE}}
 log.dirs={{KAFKA_DISK_PATH}}/broker-{{POD_INSTANCE_INDEX}}
+{{/BROKER_DISK_TYPE}}
+{{#BROKER_DISKS}}
+{{#ParseDisks}}{{/ParseDisks}}
+log.dirs={{#broker_disks}}{{MESOS_SANDBOX}}/{{Path}}{{^Last}},{{/Last}}{{/broker_disks}}
+{{/BROKER_DISKS}}
 
 # The default number of log partitions per topic. More partitions allow greater
 # parallelism for consumption, but this will also result in more files across
