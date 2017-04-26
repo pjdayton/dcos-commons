@@ -22,6 +22,8 @@ public class BrokerConfiguration {
     private double disk;
     @JsonProperty("disk_type")
     private String diskType;
+    @JsonProperty("disks")
+    private String disks;
     @JsonProperty("kafka_uri")
     private String kafkaUri;
     @JsonProperty("java_uri")
@@ -46,6 +48,7 @@ public class BrokerConfiguration {
             @JsonProperty("heap") HeapConfig heap,
             @JsonProperty("disk") double disk,
             @JsonProperty("disk_type") String diskType,
+            @JsonProperty("disks") String disks,
             @JsonProperty("kafka_uri") String kafkaUri,
             @JsonProperty("java_uri") String javaUri,
             @JsonProperty("overrider_uri") String overriderUri,
@@ -57,6 +60,7 @@ public class BrokerConfiguration {
         this.heap = heap;
         this.disk = disk;
         this.diskType = diskType;
+        this.disks = disks;
         this.kafkaUri = kafkaUri;
         this.javaUri = javaUri;
         this.overriderUri = overriderUri;
@@ -108,6 +112,15 @@ public class BrokerConfiguration {
     @JsonProperty("disk_type")
     public void setDiskType(String diskType) {
         this.diskType = diskType;
+    }
+
+    public String getDisks() {
+        return disks;
+    }
+
+    @JsonProperty("disks")
+    public void setDisks(String disks) {
+        this.disks = disks;
     }
 
     public String getKafkaUri() {
