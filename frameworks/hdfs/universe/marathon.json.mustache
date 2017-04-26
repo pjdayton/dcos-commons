@@ -48,6 +48,7 @@
     "BOOTSTRAP_URI": "{{resource.assets.uris.bootstrap-zip}}",
     "JAVA_URI": "{{resource.assets.uris.jre-tar-gz}}",
 
+    "ZOOKEEPER_QUORUM": "{{hdfs.zookeeper_quorum}}",
     {{#service.secret_name}}
     "DCOS_SERVICE_ACCOUNT_CREDENTIAL": { "secret": "serviceCredential" },
     "MESOS_MODULES": "{\"libraries\": [{\"file\": \"libdcos_security.so\", \"modules\": [{\"name\": \"com_mesosphere_dcos_ClassicRPCAuthenticatee\"}]}]}",
@@ -68,6 +69,7 @@
     "TASKCFG_ALL_KERBEROS_REALM": "{{service.kerberos.realm}}",
     {{/service.kerberos.enabled}}
     "TASKCFG_ALL_ADMINISTRATORS": "{{hdfs.administrators}}",
+    "TASKCFG_ALL_ZOOKEEPER_QUORUM": "{{hdfs.zookeeper_quorum}}",
     "TASKCFG_ALL_NAME_NODE_RPC_PORT":"{{hdfs.name_node_rpc_port}}",
     "TASKCFG_ALL_NAME_NODE_HTTP_PORT":"{{hdfs.name_node_http_port}}",
     "TASKCFG_ALL_ZKFC_PORT": "{{hdfs.zkfc_port}}",
