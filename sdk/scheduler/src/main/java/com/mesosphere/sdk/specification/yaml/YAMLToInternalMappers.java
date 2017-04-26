@@ -74,6 +74,7 @@ public class YAMLToInternalMappers {
                 .name(rawSvcSpec.getName())
                 .role(role)
                 .principal(principal)
+                .secret("")
                 .apiPort(apiPort)
                 .zookeeperConnection(zookeeper)
                 .webUrl(rawSvcSpec.getWebUrl());

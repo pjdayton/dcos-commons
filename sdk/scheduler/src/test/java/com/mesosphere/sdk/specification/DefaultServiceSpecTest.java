@@ -17,6 +17,7 @@ import com.mesosphere.sdk.dcos.DcosConstants;
 import com.mesosphere.sdk.offer.PortRequirement;
 import com.mesosphere.sdk.offer.ResourceRequirement;
 import com.mesosphere.sdk.offer.evaluate.PortsRequirement;
+import com.mesosphere.sdk.specification.yaml.YAMLServiceSpecFactory;
 import org.apache.commons.collections.MapUtils;
 import org.apache.mesos.Protos;
 import org.apache.curator.test.TestingServer;
@@ -248,6 +249,25 @@ public class DefaultServiceSpecTest {
         Assert.assertTrue(portsMap.get(HOST_PORT) == CONTAINER_PORT);
         Assert.assertTrue(portsMap.get(4041) == 8081);
         validateServiceSpec("valid-cni.yml", DcosConstants.DEFAULT_GPU_POLICY);
+    }
+
+    @Test
+    public void testSecretLoading() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        RawServiceSpec rawServiceSpec = YAMLServiceSpecFactory.generateRawSpecFromYAML(
+                new File(classLoader.getResource("aaa.yml").getFile())
+        );
+        DefaultScheduler.Builder schedBuilder =
+                DefaultScheduler.newBuilder(
+                        YAMLServiceSpecFactory.generateServiceSpec(rawServiceSpec, SchedulerFlags.fromEnv()),
+                        SchedulerFlags.fromEnv()
+                ).setPlansFrom(rawServiceSpec);
+
+        DefaultServiceSpec initialServiceSpec = (DefaultServiceSpec) schedBuilder.getServiceSpec();
+        DefaultServiceSpec.Builder newServiceSpecBuilder = initialServiceSpec.newBuilder(initialServiceSpec).secret(
+                "xxx"
+        );
+        DefaultScheduler scheduler = DefaultScheduler.newBuilder(newServiceSpecBuilder.build(), SchedulerFlags.fromEnv()).build();
     }
 
     @Test

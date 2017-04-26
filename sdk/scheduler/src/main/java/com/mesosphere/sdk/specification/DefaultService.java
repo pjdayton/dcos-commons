@@ -166,6 +166,7 @@ public class DefaultService implements Service {
                 defaultScheduler,
                 getFrameworkInfo(serviceSpec, schedulerBuilder.getStateStore()),
                 serviceSpec.getZookeeperConnection(),
+                serviceSpec.getSecret() != null ? serviceSpec.getSecret().getBytes() : null,
                 schedulerBuilder.getSchedulerFlags());
     }
 
@@ -191,10 +192,11 @@ public class DefaultService implements Service {
             Scheduler sched,
             Protos.FrameworkInfo frameworkInfo,
             String zookeeperHost,
+            byte[] secret,
             SchedulerFlags schedulerFlags) {
         LOGGER.info("Registering framework: {}", TextFormat.shortDebugString(frameworkInfo));
         Protos.Status status = new SchedulerDriverFactory().create(
-                sched, frameworkInfo, String.format("zk://%s/mesos", zookeeperHost), schedulerFlags).run();
+                sched, frameworkInfo, String.format("zk://%s/mesos", zookeeperHost), schedulerFlags, secret).run();
         // TODO(nickbp): Exit scheduler process here?
         LOGGER.error("Scheduler driver exited with status: {}", status);
     }
