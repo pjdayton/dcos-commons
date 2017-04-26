@@ -358,10 +358,14 @@ public class YAMLToInternalMappers {
                         "Both 'volume' and 'volumes' may not be specified at the same time: %s", id));
             }
             // Note: volume names for multiple volumes are currently ignored
-            for (RawVolume rawVolume : rawVolumes.values()) {
-                resourceSetBuilder.addVolume(
+            for (Map.Entry<String, RawVolume> rvk: rawVolumes.entrySet()) {
+                String name = rvk.getKey();
+                RawVolume rawVolume = rvk.getValue();
+                resourceSetBuilder.addNamedVolume(
+                        "disk",
                         rawVolume.getType(),
                         Double.valueOf(rawVolume.getSize()),
+                        rawVolume.getRoot(),
                         rawVolume.getPath());
             }
         }
@@ -369,6 +373,7 @@ public class YAMLToInternalMappers {
             resourceSetBuilder.addVolume(
                     rawSingleVolume.getType(),
                     Double.valueOf(rawSingleVolume.getSize()),
+                    rawSingleVolume.getRoot(),
                     rawSingleVolume.getPath());
         }
 
@@ -406,6 +411,7 @@ public class YAMLToInternalMappers {
         return new DefaultVolumeSpec(
                 rawVolume.getSize(),
                 volumeTypeEnum,
+                rawVolume.getRoot(),
                 rawVolume.getPath(),
                 role,
                 principal,

@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.mesosphere.sdk.offer.Constants.PORTS_RESOURCE_TYPE;
+import static com.mesosphere.sdk.offer.Constants.*;
 
 /**
  * A default implementation of the {@link OfferRequirementProvider} interface.
@@ -513,6 +513,14 @@ public class DefaultOfferRequirementProvider implements OfferRequirementProvider
                         volumeSpec.getRole(),
                         volumeSpec.getPrincipal(),
                         volumeSpec.getValue().getScalar().getValue(),
+                        volumeSpec.getContainerPath());
+                break;
+            case PATH:
+                volume = ResourceUtils.getDesiredPathVolume(
+                        volumeSpec.getRole(),
+                        volumeSpec.getPrincipal(),
+                        volumeSpec.getValue().getScalar().getValue(),
+                        volumeSpec.getRootPath(),
                         volumeSpec.getContainerPath());
                 break;
             default:

@@ -166,6 +166,22 @@ public class DefaultResourceSet implements ResourceSet {
         public Builder addVolume(String volumeType,
                                  Double size,
                                  String containerPath) {
+            return addNamedVolume("disk", volumeType, size, "", containerPath);
+        }
+
+
+        public Builder addVolume(String volumeType,
+                                 Double size,
+                                 String rootPath,
+                                 String containerPath) {
+            return addNamedVolume("disk", volumeType, size, rootPath, containerPath);
+        }
+
+        public Builder addNamedVolume(String volumeName,
+                                      String volumeType,
+                                      Double size,
+                                      String rootPath,
+                                      String containerPath) {
             VolumeSpec.Type volumeTypeEnum;
             try {
                 volumeTypeEnum = VolumeSpec.Type.valueOf(volumeType);
@@ -177,6 +193,7 @@ public class DefaultResourceSet implements ResourceSet {
             DefaultVolumeSpec volume = new DefaultVolumeSpec(
                     size,
                     volumeTypeEnum,
+                    rootPath,
                     containerPath,
                     role,
                     principal,

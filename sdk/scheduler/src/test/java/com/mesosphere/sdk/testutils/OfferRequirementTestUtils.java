@@ -11,6 +11,8 @@ import com.mesosphere.sdk.offer.TaskException;
 import com.mesosphere.sdk.offer.TaskRequirement;
 import com.mesosphere.sdk.offer.VolumeRequirement;
 import com.mesosphere.sdk.offer.evaluate.PortsRequirement;
+import com.mesosphere.sdk.specification.DefaultVolumeSpec;
+import com.mesosphere.sdk.specification.VolumeSpec;
 import org.apache.commons.lang.StringUtils;
 import org.apache.mesos.Protos;
 import org.apache.mesos.Protos.HealthCheck;
@@ -169,6 +171,37 @@ public class OfferRequirementTestUtils {
         }
 
         return resourceRequirements;
+    }
+
+    private static VolumeSpec volumeFromResource(Protos.Resource resource, String principal) {
+        VolumeSpec.Type volumeType;
+        String rootPath = null;
+
+        Protos.Resource.DiskInfo.Source.Type resourceType = resource.getDisk().getSource().getType();
+        if (resource.getDisk().hasSource() && resourceType.equals(Protos.Resource.DiskInfo.Source.Type.MOUNT)) {
+            volumeType = VolumeSpec.Type.MOUNT;
+            if (resource.getDisk().getSource().hasMount() && resource.getDisk().getSource().getMount().hasRoot()) {
+                rootPath = resource.getDisk().getSource().getMount().getRoot();
+            }
+        } else {
+            if (resource.getDisk().hasSource() && resourceType.equals(Protos.Resource.DiskInfo.Source.Type.PATH)) {
+                volumeType = VolumeSpec.Type.PATH;
+                if (resource.getDisk().getSource().hasPath() && resource.getDisk().getSource().getPath().hasRoot()) {
+                    rootPath = resource.getDisk().getSource().getPath().getRoot();
+                }
+            } else {
+                volumeType = VolumeSpec.Type.ROOT;
+            }
+        }
+
+        return new DefaultVolumeSpec(
+                resource.getScalar().getValue(),
+                volumeType,
+                rootPath,
+                resource.getDisk().getVolume().getContainerPath(),
+                resource.getRole(),
+                principal,
+                null);
     }
 
     public static Optional<HealthCheck> getReadinessCheck(TaskInfo taskInfo) throws TaskException {
