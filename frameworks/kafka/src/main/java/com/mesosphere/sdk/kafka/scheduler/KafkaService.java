@@ -11,6 +11,7 @@ import com.mesosphere.sdk.scheduler.DefaultScheduler;
 import com.mesosphere.sdk.scheduler.SchedulerFlags;
 import com.mesosphere.sdk.specification.DefaultService;
 import com.mesosphere.sdk.specification.DefaultServiceSpec;
+import com.mesosphere.sdk.specification.ServiceSpec;
 import com.mesosphere.sdk.specification.yaml.RawServiceSpec;
 import com.mesosphere.sdk.specification.yaml.YAMLServiceSpecFactory;
 import org.slf4j.Logger;
@@ -56,9 +57,13 @@ public class KafkaService extends DefaultService {
     }
 
     private Collection<Object> getResources(String zookeeperConnection, String serviceName) {
-        KafkaZKClient kafkaZKClient = new KafkaZKClient(
-                zookeeperConnection,
-                DcosConstants.SERVICE_ROOT_PATH_PREFIX + serviceName);
+        final ServiceSpec serviceSpec = super.getServiceSpec();
+        final String zkUri = String.format("/kafka-%s", serviceName);
+        final KafkaZKClient kafkaZKClient = new KafkaZKClient(System.getenv("KAFKA_ZOOKEEPER_CONNECT"), zkUri);
+
+//        KafkaZKClient kafkaZKClient = new KafkaZKClient(
+//                zookeeperConnection,
+//                DcosConstants.SERVICE_ROOT_PATH_PREFIX + serviceName);
 
         final Collection<Object> apiResources = new ArrayList<>();
         apiResources.add(new BrokerResource(kafkaZKClient));

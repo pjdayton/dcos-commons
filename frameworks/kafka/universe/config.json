@@ -126,6 +126,12 @@
         "type":"object",
         "additionalProperties":false,
         "properties":{
+          "zookeeper_connect": {
+            "title":"zookeeper.connect",
+            "description":"The Zookeeper connection string",
+            "type":"string",
+            "default":"master.mesos:2181"
+          },
           "auto_create_topics_enable":{
             "title":"auto.create.topics.enable",
             "description":"Enables auto creation of topic on the server",
