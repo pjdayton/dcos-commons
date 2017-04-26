@@ -177,7 +177,7 @@ public class DefaultService implements Service {
         Protos.FrameworkInfo frameworkInfo = getFrameworkInfo(serviceSpec, stateStore);
         LOGGER.info("Registering framework: {}", TextFormat.shortDebugString(frameworkInfo));
         String zkUri = String.format("zk://%s/mesos", serviceSpec.getZookeeperConnection());
-        Protos.Status status = new SchedulerDriverFactory().create(scheduler, frameworkInfo, zkUri, schedulerFlags).
+        Protos.Status status = new SchedulerDriverFactory().create(scheduler, frameworkInfo, zkUri, schedulerFlags, serviceSpec.getSecret() != null ? serviceSpec.getSecret().getBytes() : null).
                 run();
         // TODO(nickbp): Exit scheduler process here?
         LOGGER.error("Scheduler driver exited with status: {}", status);
