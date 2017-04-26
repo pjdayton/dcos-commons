@@ -10,6 +10,7 @@ import com.mesosphere.sdk.offer.evaluate.placement.RegexMatcher;
 import com.mesosphere.sdk.scheduler.DefaultScheduler;
 import com.mesosphere.sdk.scheduler.SchedulerFlags;
 import com.mesosphere.sdk.specification.DefaultService;
+import com.mesosphere.sdk.specification.DefaultServiceSpec;
 import com.mesosphere.sdk.specification.yaml.RawServiceSpec;
 import com.mesosphere.sdk.specification.yaml.YAMLServiceSpecFactory;
 import org.slf4j.Logger;
@@ -27,8 +28,13 @@ public class KafkaService extends DefaultService {
     public KafkaService(File pathToYamlSpecification) throws Exception {
         RawServiceSpec rawServiceSpec = YAMLServiceSpecFactory.generateRawSpecFromYAML(pathToYamlSpecification);
         SchedulerFlags schedulerFlags = SchedulerFlags.fromEnv();
-        DefaultScheduler.Builder schedulerBuilder = DefaultScheduler.newBuilder(
-                YAMLServiceSpecFactory.generateServiceSpec(rawServiceSpec, schedulerFlags), schedulerFlags)
+
+        DefaultServiceSpec serviceSpec = YAMLServiceSpecFactory.generateServiceSpec(rawServiceSpec, schedulerFlags);
+        DefaultServiceSpec.Builder serviceSpecBuilder = DefaultServiceSpec.newBuilder(serviceSpec);
+        serviceSpecBuilder.secret(System.getenv().getOrDefault("SERVICE_SECRET", ""));
+
+        DefaultScheduler.Builder schedulerBuilder = DefaultScheduler
+                .newBuilder(serviceSpecBuilder.build(), schedulerFlags)
                 .setPlansFrom(rawServiceSpec);
 
         /* Upgrade */
