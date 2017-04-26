@@ -13,6 +13,7 @@ import com.mesosphere.sdk.offer.taskdata.SchedulerLabelWriter;
 import com.mesosphere.sdk.scheduler.DefaultScheduler;
 import com.mesosphere.sdk.scheduler.SchedulerFlags;
 import com.mesosphere.sdk.specification.*;
+import com.mesosphere.sdk.specification.yaml.TemplateUtils;
 import com.mesosphere.sdk.state.StateStore;
 import org.apache.mesos.Protos;
 import org.slf4j.Logger;
@@ -214,14 +215,26 @@ public class KafkaConfigUpgrade {
                         null, null));
         It will use previously reserved ports, since there are existing tasks,
             no need to give ports to intermediate Spec */
-        ResourceSet newResourceSet = DefaultResourceSet.newBuilder(
+        DefaultResourceSet.Builder drsBuilder = DefaultResourceSet.newBuilder(
                 kafkaSchedulerConfiguration.getServiceConfiguration().getRole(),
                 kafkaSchedulerConfiguration.getServiceConfiguration().getPrincipal())
                 // it does not matter what name I gave to resource set
-                .id("broker-resource-set")
-                .addVolume(kafkaSchedulerConfiguration.getBrokerConfiguration().getDiskType(),
-                        kafkaSchedulerConfiguration.getBrokerConfiguration().getDisk(),
-                        this.newPath)
+                .id("broker-resource-set");
+        if (kafkaSchedulerConfiguration.getBrokerConfiguration().getDiskType() != null &&
+                !kafkaSchedulerConfiguration.getBrokerConfiguration().getDiskType().equals("")) {
+                drsBuilder.addVolume(kafkaSchedulerConfiguration.getBrokerConfiguration().getDiskType(),
+                    kafkaSchedulerConfiguration.getBrokerConfiguration().getDisk(),
+                    this.newPath);
+        } else if (kafkaSchedulerConfiguration.getBrokerConfiguration().getDisks() != null &&
+                !kafkaSchedulerConfiguration.getBrokerConfiguration().getDisks().equals("")) {
+            List<TemplateUtils.DiskConfig> dcs = TemplateUtils
+                    .parseDisksString(kafkaSchedulerConfiguration.getBrokerConfiguration().getDisks());
+            for (TemplateUtils.DiskConfig dc: dcs) {
+                drsBuilder.addVolume(dc.Type, (double) dc.Size, dc.Root, dc.Path);
+            }
+        }
+
+        ResourceSet newResourceSet = drsBuilder
                 .cpus(kafkaSchedulerConfiguration.getBrokerConfiguration().getCpus())
                 .memory(kafkaSchedulerConfiguration.getBrokerConfiguration().getMem())
                 // TODO(mb) .addPorts(portMap)
