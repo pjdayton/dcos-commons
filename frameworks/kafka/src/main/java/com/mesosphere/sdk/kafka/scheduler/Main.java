@@ -50,11 +50,11 @@ public class Main {
                     + CuratorUtils.getServiceRootPath(rawServiceSpec.getName());
         }
         LOGGER.info("Running Kafka with zookeeper path: {}", kafkaZookeeperUri);
-
         DefaultScheduler.Builder schedulerBuilder = DefaultScheduler.newBuilder(
                 DefaultServiceSpec
                         .newGenerator(rawServiceSpec, schedulerConfig, pathToYamlSpecification.getParentFile())
                         .setAllPodsEnv(KAFKA_ZK_URI_ENV, kafkaZookeeperUri)
+                        .getBuilder().secret(System.getenv().getOrDefault("SERVICE_SECRET", ""))
                         .build(), schedulerConfig)
                 .setPlansFrom(rawServiceSpec);
 
