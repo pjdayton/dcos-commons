@@ -106,6 +106,7 @@ public class Main {
 
         return DefaultServiceSpec.newBuilder(serviceSpec)
                 .pods(Arrays.asList(journal, name, data))
+                .secret(System.getenv().getOrDefault("SERVICE_SECRET", ""))
                 .build();
     }
 
