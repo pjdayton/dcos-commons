@@ -49,6 +49,9 @@
     "BROKER_DISK_SIZE": "{{brokers.disk}}",
     "BROKER_DISK_TYPE": "{{brokers.disk_type}}",
     "BROKER_DISK_PATH": "{{brokers.disk_path}}",
+    "BROKER_DISKS": "{{brokers.disks}}",
+    "PARSE_DISKS_INPUT_VAR": "BROKER_DISKS",
+    "PARSE_DISKS_OUTPUT_VAR": "broker_disks",
     "BROKER_JAVA_HEAP": "{{brokers.heap.size}}",
     "BROKER_PORT": "{{brokers.port}}",
 
@@ -79,6 +82,11 @@
     {{#kafka.kafka_advertise_host_ip}}
     "TASKCFG_ALL_KAFKA_ADVERTISE_HOST" : "set",
     {{/kafka.kafka_advertise_host_ip}}
+
+    "TASKCFG_ALL_BROKER_DISK_PATH" : "{{brokers.disk_path}}",
+    "TASKCFG_ALL_BROKER_DISKS" : "{{brokers.disks}}",
+    "TASKCFG_ALL_PARSE_DISKS_INPUT_VAR": "BROKER_DISKS",
+    "TASKCFG_ALL_PARSE_DISKS_OUTPUT_VAR": "broker_disks",
 
     "TASKCFG_ALL_KAFKA_RESERVED_BROKER_MAX_ID": "{{kafka.reserved_broker_max_id}}",
     "TASKCFG_ALL_KAFKA_OFFSETS_TOPIC_COMPRESSION_CODEC": "{{kafka.offsets_topic_compression_codec}}",
