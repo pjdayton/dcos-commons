@@ -35,8 +35,23 @@ public class ResourceTestUtils {
         return getReservedMountVolume(diskSize, TestConstants.RESOURCE_ID, TestConstants.PERSISTENCE_ID);
     }
 
+    public static Protos.Resource getReservedPathVolume(double diskSize) {
+        return getReservedPathVolume(diskSize, TestConstants.RESOURCE_ID, TestConstants.PERSISTENCE_ID);
+    }
+
     public static Protos.Resource getReservedMountVolume(double diskSize, String resourceId, String persistenceId) {
         Protos.Resource.Builder builder = getUnreservedMountVolume(diskSize).toBuilder();
+        builder.getDiskBuilder().getPersistenceBuilder()
+                .setId(persistenceId)
+                .setPrincipal(TestConstants.PRINCIPAL);
+        builder.getDiskBuilder().getVolumeBuilder()
+                .setContainerPath(TestConstants.CONTAINER_PATH)
+                .setMode(Volume.Mode.RW);
+        return addReservation(builder, resourceId).build();
+    }
+
+    public static Protos.Resource getReservedPathVolume(double diskSize, String resourceId, String persistenceId) {
+        Protos.Resource.Builder builder = getUnreservedPathVolume(diskSize).toBuilder();
         builder.getDiskBuilder().getPersistenceBuilder()
                 .setId(persistenceId)
                 .setPrincipal(TestConstants.PRINCIPAL);
@@ -54,6 +69,7 @@ public class ResourceTestUtils {
         VolumeSpec volumeSpec = new DefaultVolumeSpec(
                 diskSize,
                 VolumeSpec.Type.ROOT,
+                "",
                 TestConstants.CONTAINER_PATH,
                 TestConstants.ROLE,
                 Constants.ANY_ROLE,
@@ -99,6 +115,22 @@ public class ResourceTestUtils {
         builder.getDiskBuilder().getSourceBuilder()
                 .setType(Protos.Resource.DiskInfo.Source.Type.MOUNT)
                 .getMountBuilder().setRoot(TestConstants.MOUNT_ROOT);
+        return builder.build();
+    }
+
+    public static Protos.Resource getUnreservedPathVolume(double diskSize) {
+        Protos.Resource.Builder builder = getUnreservedDisk(diskSize).toBuilder();
+        builder.getDiskBuilder().getSourceBuilder()
+                .setType(Protos.Resource.DiskInfo.Source.Type.PATH)
+                .getPathBuilder().setRoot(TestConstants.PATH_ROOT);
+        return builder.build();
+    }
+
+    public static Protos.Resource getUnreservedPathVolume(double diskSize, String root) {
+        Protos.Resource.Builder builder = getUnreservedDisk(diskSize).toBuilder();
+        builder.getDiskBuilder().getSourceBuilder()
+                .setType(Protos.Resource.DiskInfo.Source.Type.PATH)
+                .getPathBuilder().setRoot(root);
         return builder.build();
     }
 
