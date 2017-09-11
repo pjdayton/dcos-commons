@@ -19,6 +19,7 @@ import com.mesosphere.sdk.specification.util.RLimit;
 import org.apache.mesos.Protos;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -55,7 +56,7 @@ public class YAMLToInternalMappers {
      * @param configTemplateReader the file reader to be used for reading template files, allowing overrides for testing
      * @throws Exception if the conversion fails
      */
-    public static DefaultServiceSpec convertServiceSpec(
+    public static DefaultServiceSpec.Builder convertServiceSpecToBuilder(
             RawServiceSpec rawServiceSpec,
             SchedulerFlags schedulerFlags,
             TaskEnvRouter taskEnvRouter,
@@ -71,6 +72,7 @@ public class YAMLToInternalMappers {
                 .name(SchedulerUtils.getServiceName(rawServiceSpec))
                 .role(role)
                 .principal(principal)
+                .secret("")
                 .zookeeperConnection(SchedulerUtils.getZkHost(rawServiceSpec, schedulerFlags))
                 .webUrl(rawServiceSpec.getWebUrl())
                 .user(user);
@@ -94,7 +96,23 @@ public class YAMLToInternalMappers {
         }
         builder.pods(pods);
 
-        return builder.build();
+        return builder;
+    }
+
+
+    /**
+     * Converts the provided YAML {@link RawServiceSpec} into a new {@link ServiceSpec}.
+     *
+     * @param rawServiceSpec the raw service specification representing a YAML file
+     * @param templateReader the file reader to be used for reading template files, allowing overrides for testing
+     * @throws Exception if the conversion fails
+     */
+    public static DefaultServiceSpec convertServiceSpec(
+            RawServiceSpec rawServiceSpec,
+            SchedulerFlags schedulerFlags,
+            TaskEnvRouter taskEnvRouter,
+            ConfigTemplateReader templateReader) throws Exception {
+        return convertServiceSpecToBuilder(rawServiceSpec, schedulerFlags, taskEnvRouter, templateReader).build();
     }
 
     /**

@@ -47,6 +47,7 @@ public class DefaultServiceSpec implements ServiceSpec {
     private String name;
     private String role;
     private String principal;
+    private String secret;
     private String user;
 
     private String webUrl;
@@ -66,6 +67,7 @@ public class DefaultServiceSpec implements ServiceSpec {
             @JsonProperty("name") String name,
             @JsonProperty("role") String role,
             @JsonProperty("principal") String principal,
+            @JsonProperty("secret") String secret,
             @JsonProperty("web-url") String webUrl,
             @JsonProperty("zookeeper") String zookeeperConnection,
             @JsonProperty("pod-specs") List<PodSpec> pods,
@@ -74,6 +76,7 @@ public class DefaultServiceSpec implements ServiceSpec {
         this.name = name;
         this.role = role;
         this.principal = principal;
+        this.secret = secret;
         this.webUrl = webUrl;
         // If no zookeeperConnection string is configured, fallback to the default value.
         this.zookeeperConnection = StringUtils.isBlank(zookeeperConnection)
@@ -106,6 +109,7 @@ public class DefaultServiceSpec implements ServiceSpec {
                 builder.name,
                 builder.role,
                 builder.principal,
+                builder.secret,
                 builder.webUrl,
                 builder.zookeeperConnection,
                 builder.pods,
@@ -161,6 +165,7 @@ public class DefaultServiceSpec implements ServiceSpec {
         builder.name = copy.getName();
         builder.role = copy.getRole();
         builder.principal = copy.getPrincipal();
+        builder.secret = copy.getSecret();
         builder.zookeeperConnection = copy.getZookeeperConnection();
         builder.webUrl = copy.getWebUrl();
         builder.pods = copy.getPods();
@@ -182,6 +187,11 @@ public class DefaultServiceSpec implements ServiceSpec {
     @Override
     public String getPrincipal() {
         return principal;
+    }
+
+    @Override
+    public String getSecret() {
+        return secret;
     }
 
     @Override
@@ -404,13 +414,17 @@ public class DefaultServiceSpec implements ServiceSpec {
         }
 
         /**
-         * Assigns a custom {@link YAMLToInternalMappers.FileReader} implementation for reading config file templates.
+         * Assigns a custom {@link YAMLToInternalMappers.ConfigTemplateReader} implementation for reading config file templates.
          * This is exposed to support mockery in tests.
          */
         @VisibleForTesting
         public Generator setConfigTemplateReader(YAMLToInternalMappers.ConfigTemplateReader configTemplateReader) {
             this.configTemplateReader = configTemplateReader;
             return this;
+        }
+
+        public DefaultServiceSpec.Builder getBuilder() throws Exception {
+            return YAMLToInternalMappers.convertServiceSpecToBuilder(rawServiceSpec, schedulerFlags, taskEnvRouter, configTemplateReader);
         }
 
         public DefaultServiceSpec build() throws Exception {
@@ -427,6 +441,7 @@ public class DefaultServiceSpec implements ServiceSpec {
         private String name;
         private String role;
         private String principal;
+        private String secret;
         private String webUrl;
         private String zookeeperConnection;
         private List<PodSpec> pods = new ArrayList<>();
@@ -467,6 +482,18 @@ public class DefaultServiceSpec implements ServiceSpec {
          */
         public Builder principal(String principal) {
             this.principal = principal;
+            return this;
+        }
+
+        /**
+         * Sets the {@code secret} and returns a reference to this Builder so that the methods can be chained
+         * together.
+         *
+         * @param secret the {@code secret} to set
+         * @return a reference to this Builder
+         */
+        public Builder secret(String secret) {
+            this.secret = secret;
             return this;
         }
 
