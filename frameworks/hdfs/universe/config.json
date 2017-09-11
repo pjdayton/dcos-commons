@@ -264,6 +264,11 @@
           "description": "Administrators for the HDFS cluster",
           "default": "core,centos,azureuser"
         },
+        "zookeeper_quorum": {
+          "type": "string",
+          "description": "The address of the entire zookeeper quorum",
+          "default": "master.mesos:2181"
+        },
         "name_node_rpc_port": {
           "type": "integer",
           "description": "The RPC port for HDFS Name Nodes.",
@@ -351,6 +356,7 @@
         }
       },
       "required": [
+        "zookeeper_quorum",
         "name_node_rpc_port",
         "name_node_http_port",
         "name_node_https_port",
