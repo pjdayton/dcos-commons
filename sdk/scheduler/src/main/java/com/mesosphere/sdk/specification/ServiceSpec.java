@@ -19,6 +19,9 @@ public interface ServiceSpec extends Configuration {
     @JsonProperty("principal")
     String getPrincipal();
 
+    @JsonProperty("secret")
+    String getSecret();
+
     @JsonProperty("pod-specs")
     List<PodSpec> getPods();
 
