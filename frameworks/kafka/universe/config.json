@@ -30,6 +30,16 @@
             "type": "string",
             "default": ""
           },
+          "secret_file_path": {
+            "description": "The secret file on the host",
+            "type": "string",
+            "default": "/etc/ethos/dcos-kafka-secret"
+          },
+          "secret_file_name": {
+            "description": "The secret file on the host",
+            "type": "string",
+            "default": "dcos-kafka-secret"
+          },
           "placement_constraint": {
             "description": "Marathon-style placement constraint for Broker nodes. Example: rack_id:LIKE:rack-foo-.*,rack_id:MAX_PER:2",
             "type": "string",
