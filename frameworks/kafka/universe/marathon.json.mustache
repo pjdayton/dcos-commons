@@ -176,6 +176,9 @@
     "TASKCFG_ALL_KAFKA_COMPRESSION_TYPE": "{{kafka.compression_type}}"
   },
   "uris": [
+    {{#service.secret_file_path}}
+    "file://{{service.secret_file_path}}",
+    {{/service.secret_file_path}}
     "{{resource.assets.uris.executor-zip}}",
     "{{resource.assets.uris.bootstrap-zip}}",
     "{{resource.assets.uris.kafka-scheduler-zip}}",
