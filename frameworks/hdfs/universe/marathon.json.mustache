@@ -54,6 +54,7 @@
     "HDFS_JAVA_URI": "{{resource.assets.uris.hdfs-jre-tar-gz}}",
     "BOOTSTRAP_URI": "{{resource.assets.uris.bootstrap-zip}}",
     "JAVA_URI": "{{resource.assets.uris.jre-tar-gz}}",
+    "ZOOKEEPER_QUORUM": "{{hdfs.zookeeper_quorum}}",
 
     {{#service.virtual_network_enabled}}
     "ENABLE_VIRTUAL_NETWORK": "yes",
@@ -87,6 +88,7 @@
     "TASKCFG_ALL_KERBEROS_REALM": "{{service.kerberos.realm}}",
     {{/service.kerberos.enabled}}
     "TASKCFG_ALL_ADMINISTRATORS": "{{hdfs.administrators}}",
+    "TASKCFG_ALL_ZOOKEEPER_QUORUM": "{{hdfs.zookeeper_quorum}}",
     "TASKCFG_ALL_NAME_NODE_RPC_PORT":"{{hdfs.name_node_rpc_port}}",
     "TASKCFG_ALL_NAME_NODE_HTTP_PORT":"{{hdfs.name_node_http_port}}",
     "TASKCFG_ALL_ZKFC_PORT": "{{hdfs.zkfc_port}}",
