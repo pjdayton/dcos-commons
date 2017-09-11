@@ -138,12 +138,15 @@ public class DefaultService implements Runnable {
                 LOGGER.info("Registering framework: {}", TextFormat.shortDebugString(frameworkInfo));
                 String zkUri =
                         String.format("zk://%s/mesos", schedulerBuilder.getServiceSpec().getZookeeperConnection());
+                ServiceSpec serviceSpec = schedulerBuilder.getServiceSpec();
+
                 status = new SchedulerDriverFactory()
                         .create(
                                 scheduler.getMesosScheduler().get(),
                                 frameworkInfo,
                                 zkUri,
-                                schedulerBuilder.getSchedulerConfig())
+                                schedulerBuilder.getSchedulerConfig(),
+                                serviceSpec.getSecret() != null ? serviceSpec.getSecret().getBytes() : null)
                         .run();
                 LOGGER.error("Scheduler driver exited with status: {}", status);
                 // DRIVER_STOPPED will occur when we call stop(boolean) during uninstall.
