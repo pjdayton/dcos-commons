@@ -121,6 +121,11 @@
             "description": "Relative path of consistent disk",
             "default": "kafka-broker-data"
           },
+          "disks": {
+            "type": "string",
+            "description": "Broker multi-disk support",
+            "default": ""
+          },
           "count": {
             "description": "Number of brokers to run",
             "type": "number",
@@ -145,7 +150,6 @@
         "required": [
           "cpus",
           "mem",
-          "disk",
           "count"
         ]
       },
