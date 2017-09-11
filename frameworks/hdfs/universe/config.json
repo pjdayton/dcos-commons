@@ -45,6 +45,16 @@
           "type": "string",
           "default": ""
         },
+        "secret-file-path": {
+          "description": "The secret file on the host",
+          "type": "string",
+          "default": "/etc/ethos/dcos-hdfs-secret"
+        },
+        "secret-file-name": {
+          "description": "The secret file on the host",
+          "type": "string",
+          "default": "dcos-hdfs-secret"
+        },
         "deploy_strategy": {
           "description": "HDFS deployment strategy. [parallel, serial]",
           "type": "string",
@@ -112,7 +122,7 @@
       }
     },
     "journal_node": {
-      "description":"HDFS configuration properties.",
+      "description": "HDFS configuration properties.",
       "type": "object",
       "properties": {
         "cpus": {
@@ -186,7 +196,7 @@
       ]
     },
     "zkfc_node": {
-      "description":"HDFS configuration properties.",
+      "description": "HDFS configuration properties.",
       "type": "object",
       "properties": {
         "cpus": {
@@ -205,18 +215,18 @@
         "mem"
       ]
     },
-    "data_node":{
-      "description":"HDFS configuration properties.",
-      "type":"object",
-      "properties":{
-        "count":{
-          "description":"Data node count requirement",
-          "type":"number",
+    "data_node": {
+      "description": "HDFS configuration properties.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Data node count requirement",
+          "type": "number",
           "default": 3
         },
-        "cpus":{
-          "description":"Data node CPU requirement",
-          "type":"number",
+        "cpus": {
+          "description": "Data node CPU requirement",
+          "type": "number",
           "default": 0.3
         },
         "mem":{
