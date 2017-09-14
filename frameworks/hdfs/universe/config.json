@@ -229,17 +229,20 @@
           "type":"number",
           "default": 5000
         },
-        "disk_type":{
-          "description":"Data node disk type",
-          "type":"string",
+        "disk_type": {
+          "description": "Data node disk type",
+          "type": "string",
           "default": "ROOT"
+        },
+        "disks": {
+          "description": "Data node multi disk specifier",
+          "type": "string",
+          "default": ""
         }
       },
       "required": [
         "cpus",
-        "mem",
-        "disk",
-        "disk_type"
+        "mem"
       ]
     },
     "hdfs": {
