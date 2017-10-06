@@ -4,7 +4,7 @@
   "mem": 1024,
   "instances": 1,
   "user":"{{service.user}}",
-  "cmd": "export LD_LIBRARY_PATH=$MESOS_SANDBOX/libmesos-bundle/lib:$LD_LIBRARY_PATH; export MESOS_NATIVE_JAVA_LIBRARY=$(ls $MESOS_SANDBOX/libmesos-bundle/lib/libmesos-*.so); export JAVA_HOME=$(ls -d $MESOS_SANDBOX/jre*/); export JAVA_HOME=${JAVA_HOME%/}; export PATH=$(ls -d $JAVA_HOME/bin):$PATH &&  export JAVA_OPTS=\"-Xms256M -Xmx512M -XX:-HeapDumpOnOutOfMemoryError\" &&  ./kafka-scheduler/bin/kafka ./kafka-scheduler/svc.yml",
+  "cmd": "export LD_LIBRARY_PATH=$MESOS_SANDBOX/libmesos-bundle/lib:$LD_LIBRARY_PATH; export MESOS_NATIVE_JAVA_LIBRARY=$(ls $MESOS_SANDBOX/libmesos-bundle/lib/libmesos-*.so); export JAVA_HOME=$(ls -d $MESOS_SANDBOX/jre*/); export JAVA_HOME=${JAVA_HOME%/}; export PATH=$(ls -d $JAVA_HOME/bin):$PATH &&  export JAVA_OPTS=\"-Xms256M -Xmx512M -XX:-HeapDumpOnOutOfMemoryError\" &&  ./kafka-scheduler/bin/kafka ./kafka-scheduler/svc-multi-disk.yml",
   "labels": {
     "DCOS_COMMONS_API_VERSION": "v1",
     "DCOS_COMMONS_UNINSTALL": "true",
@@ -49,6 +49,9 @@
     "BROKER_DISK_SIZE": "{{brokers.disk}}",
     "BROKER_DISK_TYPE": "{{brokers.disk_type}}",
     "BROKER_DISK_PATH": "{{brokers.disk_path}}",
+    "BROKER_DISKS": "{{brokers.disks}}",
+    "PARSE_DISKS_INPUT_VAR": "BROKER_DISKS",
+    "PARSE_DISKS_OUTPUT_VAR": "broker_disks",
     "BROKER_JAVA_HEAP": "{{brokers.heap.size}}",
     "BROKER_PORT": "{{brokers.port}}",
 
@@ -79,6 +82,11 @@
     {{#kafka.kafka_advertise_host_ip}}
     "TASKCFG_ALL_KAFKA_ADVERTISE_HOST" : "set",
     {{/kafka.kafka_advertise_host_ip}}
+
+    "TASKCFG_ALL_BROKER_DISK_PATH" : "{{brokers.disk_path}}",
+    "TASKCFG_ALL_BROKER_DISKS" : "{{brokers.disks}}",
+    "TASKCFG_ALL_PARSE_DISKS_INPUT_VAR": "BROKER_DISKS",
+    "TASKCFG_ALL_PARSE_DISKS_OUTPUT_VAR": "broker_disks",
 
     "TASKCFG_ALL_KAFKA_RESERVED_BROKER_MAX_ID": "{{kafka.reserved_broker_max_id}}",
     "TASKCFG_ALL_KAFKA_OFFSETS_TOPIC_COMPRESSION_CODEC": "{{kafka.offsets_topic_compression_codec}}",
