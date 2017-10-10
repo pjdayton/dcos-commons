@@ -61,6 +61,32 @@
           "default": "parallel",
           "enum" : ["parallel", "serial"]
         },
+        "placement_constraint": {
+          "type": "object",
+          "description": "Marathon placement constraint for HDFS nodes. Documentation available at mesosphere.github.io/marathon/docs/constraints",
+          "properties": {
+            "framework": {
+              "description": "Marathon placement constraint for HDFS Mesos framework. Example: [[\"rack_id\", \"LIKE\", \"rack-foo-.*\"],[\"rack_id\", \"MAX_PER\", \"2\"]]",
+              "type": "string",
+              "default": "[]"
+            },
+            "journal": {
+              "description": "Marathon placement constraint for HDFS Journal Nodes. Example: rack_id:LIKE:rack-foo-.*,rack_id:MAX_PER:2",
+              "type": "string",
+              "default": ""
+            },
+            "name": {
+              "description": "Marathon placement constraint for HDFS Name Nodes and ZKFC. Example: rack_id:LIKE:rack-foo-.*,rack_id:MAX_PER:2",
+              "type": "string",
+              "default": ""
+            },
+            "data": {
+              "description": "Marathon placement constraint for HDFS Data Nodes. Example: rack_id:LIKE:rack-foo-.*,rack_id:MAX_PER:2",
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
         "update_strategy": {
           "description": "HDFS update strategy. [parallel, serial]",
           "type": "string",

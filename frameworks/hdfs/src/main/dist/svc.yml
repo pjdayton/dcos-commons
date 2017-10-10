@@ -5,6 +5,7 @@ scheduler:
 pods:
   journal:
     count: 3
+    placement: {{JOURNAL_PLACEMENT_CONSTRAINTS}}
     uris:
       - {{HDFS_URI}}
       - {{HDFS_BIN_URI}}
@@ -103,6 +104,7 @@ pods:
         {{/TLS_ENABLED}}
   name:
     count: 2
+    placement: {{NAME_PLACEMENT_CONSTRAINTS}}
     uris:
       - {{HDFS_URI}}
       - {{HDFS_BIN_URI}}
@@ -303,6 +305,7 @@ pods:
           ZKFC: true
   data:
     count: {{DATA_COUNT}}
+    placement: {{DATA_PLACEMENT_CONSTRAINTS}}
     uris:
       - {{HDFS_URI}}
       - {{HDFS_BIN_URI}}

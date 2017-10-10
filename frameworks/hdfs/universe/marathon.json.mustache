@@ -4,6 +4,7 @@
   "mem": 1024,
   "instances": 1,
   "user": "{{service.user}}",
+  "constraints": {{{service.placement_constraint.framework}}},
   "cmd": "{{#service.secret-file-name }}export SERVICE_SECRET=$(cat {{service.secret-file-name}}); {{/service.secret-file-name}} export LD_LIBRARY_PATH=$MESOS_SANDBOX/libmesos-bundle/lib:$LD_LIBRARY_PATH; export MESOS_NATIVE_JAVA_LIBRARY=$(ls $MESOS_SANDBOX/libmesos-bundle/lib/libmesos-*.so); export JAVA_HOME=$(ls -d $MESOS_SANDBOX/jre*/); export JAVA_HOME=${JAVA_HOME%/}; export PATH=$(ls -d $JAVA_HOME/bin):$PATH && export JAVA_OPTS=\"-Xms256M -Xmx512M -XX:-HeapDumpOnOutOfMemoryError\" && ./hdfs-scheduler/bin/hdfs ./hdfs-scheduler/svc-multi-disk.yml",
   "labels": {
     "DCOS_COMMONS_API_VERSION": "v1",
@@ -33,6 +34,9 @@
     "TASKCFG_ALL_JRE_VERSION": "jre1.8.0_131",
     "DEPLOY_STRATEGY": "{{service.deploy_strategy}}",
     "UPDATE_STRATEGY": "{{service.update_strategy}}",
+    "JOURNAL_PLACEMENT_CONSTRAINTS": "{{service.placement_constraint.journal}}",
+    "NAME_PLACEMENT_CONSTRAINTS": "{{service.placement_constraint.name}}",
+    "DATA_PLACEMENT_CONSTRAINTS": "{{service.placement_constraint.data}}",
     "SERVICE_PRINCIPAL": "{{service.service_account}}",
     "JOURNAL_CPUS": "{{journal_node.cpus}}",
     "JOURNAL_MEM": "{{journal_node.mem}}",

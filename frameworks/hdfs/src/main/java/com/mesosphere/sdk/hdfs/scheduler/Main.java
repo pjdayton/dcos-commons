@@ -5,6 +5,7 @@ import com.mesosphere.sdk.api.types.EndpointProducer;
 import com.mesosphere.sdk.config.TaskEnvRouter;
 import com.mesosphere.sdk.curator.CuratorUtils;
 import com.mesosphere.sdk.offer.evaluate.placement.AndRule;
+import com.mesosphere.sdk.offer.evaluate.placement.PlacementRule;
 import com.mesosphere.sdk.offer.evaluate.placement.TaskTypeRule;
 import com.mesosphere.sdk.offer.taskdata.EnvConstants;
 import com.mesosphere.sdk.scheduler.DefaultScheduler;
@@ -20,10 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * HDFS Service.
@@ -89,19 +87,33 @@ public class Main {
 
 
     private static ServiceSpec serviceSpecWithCustomizedPods(DefaultServiceSpec serviceSpec) throws Exception {
-        // Journal nodes avoid themselves and Name nodes.
+        // Journal nodes avoid themselves and Name nodes AND satisfy passed Journal nodes placement rule.
+        List<PlacementRule> journalPlacement = new ArrayList<>();
+        journalPlacement.add(TaskTypeRule.avoid("journal"));
+        journalPlacement.add(TaskTypeRule.avoid("name"));
+        getPodSpec(serviceSpec, "journal").getPlacementRule().ifPresent(journalPlacement::add);
+
+        // Name nodes avoid themselves and journal nodes AND satisfy passed Name nodes placement rule.
+        List<PlacementRule> namePlacement = new ArrayList<>();
+        namePlacement.add(TaskTypeRule.avoid("name"));
+        namePlacement.add(TaskTypeRule.avoid("journal"));
+        getPodSpec(serviceSpec, "name").getPlacementRule().ifPresent(namePlacement::add);
+
+        // Data nodes avoid themselves AND satisfy passed Data nodes placement rule.
+        List<PlacementRule> dataPlacement = new ArrayList<>();
+        dataPlacement.add(TaskTypeRule.avoid("data"));
+        getPodSpec(serviceSpec, "data").getPlacementRule().ifPresent(dataPlacement::add);
+
         PodSpec journal = DefaultPodSpec.newBuilder(getPodSpec(serviceSpec, "journal"))
-                .placementRule(new AndRule(TaskTypeRule.avoid("journal"), TaskTypeRule.avoid("name")))
+                .placementRule(new AndRule(journalPlacement.toArray(new PlacementRule[journalPlacement.size()])))
                 .build();
 
-        // Name nodes avoid themselves and journal nodes.
         PodSpec name = DefaultPodSpec.newBuilder(getPodSpec(serviceSpec, "name"))
-                .placementRule(new AndRule(TaskTypeRule.avoid("name"), TaskTypeRule.avoid("journal")))
+                .placementRule(new AndRule(namePlacement.toArray(new PlacementRule[namePlacement.size()])))
                 .build();
 
-        // Data nodes avoid themselves.
         PodSpec data = DefaultPodSpec.newBuilder(getPodSpec(serviceSpec, "data"))
-                .placementRule(TaskTypeRule.avoid("data"))
+                .placementRule(new AndRule(dataPlacement.toArray(new PlacementRule[dataPlacement.size()])))
                 .build();
 
         return DefaultServiceSpec.newBuilder(serviceSpec)
