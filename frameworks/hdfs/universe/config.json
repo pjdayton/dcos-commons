@@ -151,6 +151,11 @@
       "description": "HDFS configuration properties.",
       "type": "object",
       "properties": {
+        "count": {
+          "description": "Journal node count requirement. Should be an odd number 3, 5, 7, ... for the purpose of establishing a quorum; n JNs can tolerate at most (n-1)/2 failures.",
+          "type": "number",
+          "default": 3
+        },
         "cpus": {
           "description": "Journal node CPU requirement",
           "type": "number",

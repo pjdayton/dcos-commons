@@ -4,7 +4,7 @@ scheduler:
   user: {{TASKCFG_ALL_TASK_USER}}
 pods:
   journal:
-    count: 3
+    count: {{JOURNAL_COUNT}}
     placement: {{JOURNAL_PLACEMENT_CONSTRAINTS}}
     uris:
       - {{HDFS_URI}}
