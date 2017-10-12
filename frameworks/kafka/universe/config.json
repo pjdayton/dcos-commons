@@ -41,9 +41,20 @@
             "default": "dcos-kafka-secret"
           },
           "placement_constraint": {
-            "description": "Marathon-style placement constraint for Broker nodes. Example: rack_id:LIKE:rack-foo-.*,rack_id:MAX_PER:2",
-            "type": "string",
-            "default": "hostname:MAX_PER:1"
+            "type": "object",
+            "description": "Marathon placement constraint for Broker nodes. Documentation available at mesosphere.github.io/marathon/docs/constraints",
+            "properties": {
+              "framework": {
+                "description": "Marathon placement constraint for Kafka Mesos framework. Example: [[\"rack_id\", \"LIKE\", \"rack-foo-.*\"],[\"rack_id\", \"MAX_PER\", \"2\"]]",
+                "type": "string",
+                "default": "[]"
+              },
+              "broker": {
+                "description": "Marathon placement constraint for Kafka Broker Nodes. Example: rack_id:LIKE:rack-foo-.*,rack_id:MAX_PER:2",
+                "type": "string",
+                "default": "hostname:MAX_PER:1"
+              }
+            }
           },
           "virtual_network_enabled": {
             "description": "Enable virtual networking",

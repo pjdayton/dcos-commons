@@ -4,6 +4,7 @@
   "mem": 1024,
   "instances": 1,
   "user":"{{service.user}}",
+  "constraints": {{{service.placement_constraint.framework}}},
   "cmd": "{{#service.secret_file_name }}export SERVICE_SECRET=$(cat {{service.secret_file_name}}); {{/service.secret_file_name}} export LD_LIBRARY_PATH=$MESOS_SANDBOX/libmesos-bundle/lib:$LD_LIBRARY_PATH; export MESOS_NATIVE_JAVA_LIBRARY=$(ls $MESOS_SANDBOX/libmesos-bundle/lib/libmesos-*.so); export JAVA_HOME=$(ls -d $MESOS_SANDBOX/jre*/); export JAVA_HOME=${JAVA_HOME%/}; export PATH=$(ls -d $JAVA_HOME/bin):$PATH &&  export JAVA_OPTS=\"-Xms256M -Xmx512M -XX:-HeapDumpOnOutOfMemoryError\" &&  ./kafka-scheduler/bin/kafka ./kafka-scheduler/svc-multi-disk.yml",
   "labels": {
     "DCOS_COMMONS_API_VERSION": "v1",
@@ -41,7 +42,7 @@
     "KAFKA_STATSD_URI": "{{resource.assets.uris.kafka-statsd-jar}}",
     "CLIENT_STATSD_URI": "{{resource.assets.uris.statsd-client-jar}}",
 
-    "PLACEMENT_CONSTRAINTS": "{{service.placement_constraint}}",
+    "PLACEMENT_CONSTRAINTS": "{{service.placement_constraint.broker}}",
     "DEPLOY_STRATEGY":"{{service.deploy_strategy}}",
     "BROKER_COUNT": "{{brokers.count}}",
     "BROKER_CPUS": "{{brokers.cpus}}",
