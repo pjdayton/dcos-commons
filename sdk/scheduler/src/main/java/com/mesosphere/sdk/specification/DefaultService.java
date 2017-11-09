@@ -162,9 +162,11 @@ public class DefaultService implements Runnable {
                 LOGGER.info("Registering framework: {}", TextFormat.shortDebugString(frameworkInfo));
                 String zkUri =
                         String.format("zk://%s/mesos", schedulerBuilder.getServiceSpec().getZookeeperConnection());
+                ServiceSpec serviceSpec = schedulerBuilder.getServiceSpec();
+
                 status = new SchedulerDriverFactory()
-                        .create(scheduler, frameworkInfo, zkUri, schedulerBuilder.getSchedulerFlags())
-                        .run();
+                    .create(scheduler, frameworkInfo, zkUri, schedulerBuilder.getSchedulerFlags(), serviceSpec.getSecret() != null ? serviceSpec.getSecret().getBytes() : null)
+                    .run();
                 LOGGER.error("Scheduler driver exited with status: {}", status);
             } finally {
                 locker.unlock();
